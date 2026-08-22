@@ -11,7 +11,7 @@ const AVATAR_OPTIONS = [
   { key: "plum", label: "🍑 Pink" },
 ] as const;
 
-type MemberDraft = { name: string; avatarStyle: string };
+type MemberDraft = { name: string; avatarStyle: string; isManager: boolean };
 
 type Links = {
   memberLinks: { name: string; path: string }[];
@@ -28,10 +28,10 @@ export function SetupWizard() {
   const [name, setName] = useState("Broccoli Battle");
   const [timezone, setTimezone] = useState("Europe/London");
   const [members, setMembers] = useState<MemberDraft[]>([
-    { name: "Mum", avatarStyle: "tomato" },
-    { name: "Dad", avatarStyle: "broccoli" },
-    { name: "Cerys", avatarStyle: "blueberry" },
-    { name: "Evie", avatarStyle: "carrot" },
+    { name: "Mum", avatarStyle: "tomato", isManager: false },
+    { name: "Dad", avatarStyle: "broccoli", isManager: true },
+    { name: "Cerys", avatarStyle: "blueberry", isManager: false },
+    { name: "Evie", avatarStyle: "carrot", isManager: false },
   ]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -79,7 +79,10 @@ export function SetupWizard() {
         {links.memberLinks.map((l) => (
           <CopyRow key={l.path} label={`${l.name}'s invite`} path={l.path} />
         ))}
-        <CopyRow label="🔧 Management access" path={links.managementPath} />
+        <CopyRow
+          label="🔧 Spare management link (the team manager's own invite already unlocks settings)"
+          path={links.managementPath}
+        />
         <a
           href={links.memberLinks[0]?.path ?? "/"}
           className="pressable card-sticker mt-2 block bg-broccoli px-4 py-3 text-center font-display text-xl text-white"
@@ -133,36 +136,53 @@ export function SetupWizard() {
       <fieldset className="flex flex-col gap-2">
         <legend className="font-display pb-1 text-sm">The four fighters</legend>
         {members.map((m, i) => (
-          <div key={i} className="card-sticker flex items-center gap-2 px-3 py-2">
-            <input
-              value={m.name}
-              maxLength={40}
-              aria-label={`Player ${i + 1} name`}
-              onChange={(e) =>
-                setMembers((ms) =>
-                  ms.map((x, j) => (j === i ? { ...x, name: e.target.value } : x)),
-                )
-              }
-              className="w-0 flex-1 rounded-xl border-2 border-ink bg-cream px-3 py-1.5 font-bold outline-none"
-            />
-            <select
-              value={m.avatarStyle}
-              aria-label={`Player ${i + 1} colour`}
-              onChange={(e) =>
-                setMembers((ms) =>
-                  ms.map((x, j) =>
-                    j === i ? { ...x, avatarStyle: e.target.value } : x,
-                  ),
-                )
-              }
-              className="rounded-xl border-2 border-ink bg-paper px-2 py-1.5 text-sm font-bold outline-none"
-            >
-              {AVATAR_OPTIONS.map((o) => (
-                <option key={o.key} value={o.key}>
-                  {o.label}
-                </option>
-              ))}
-            </select>
+          <div key={i} className="card-sticker px-3 py-2">
+            <div className="flex items-center gap-2">
+              <input
+                value={m.name}
+                maxLength={40}
+                aria-label={`Player ${i + 1} name`}
+                onChange={(e) =>
+                  setMembers((ms) =>
+                    ms.map((x, j) => (j === i ? { ...x, name: e.target.value } : x)),
+                  )
+                }
+                className="w-0 flex-1 rounded-xl border-2 border-ink bg-cream px-3 py-1.5 font-bold outline-none"
+              />
+              <select
+                value={m.avatarStyle}
+                aria-label={`Player ${i + 1} colour`}
+                onChange={(e) =>
+                  setMembers((ms) =>
+                    ms.map((x, j) =>
+                      j === i ? { ...x, avatarStyle: e.target.value } : x,
+                    ),
+                  )
+                }
+                className="rounded-xl border-2 border-ink bg-paper px-2 py-1.5 text-sm font-bold outline-none"
+              >
+                {AVATAR_OPTIONS.map((o) => (
+                  <option key={o.key} value={o.key}>
+                    {o.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <label className="flex items-center gap-1.5 pt-1.5 text-xs font-bold text-ink-soft">
+              <input
+                type="radio"
+                name="manager"
+                checked={m.isManager}
+                onChange={() =>
+                  setMembers((ms) =>
+                    ms.map((x, j) => ({ ...x, isManager: j === i })),
+                  )
+                }
+                className="size-4 accent-broccoli"
+              />
+              🔧 Team manager — this person&apos;s phone also gets the
+              household settings
+            </label>
           </div>
         ))}
       </fieldset>

@@ -61,4 +61,16 @@ describe("member invite binding", () => {
     );
     expect(bound?.household.id).toBe(world.household.id);
   });
+
+  it("the member chosen as manager at setup carries the manager flag", async () => {
+    const world = await createWorld();
+    const dadLink = world.setup.memberLinks.find((l) => l.name === "Dad")!;
+    const mumLink = world.setup.memberLinks.find((l) => l.name === "Mum")!;
+
+    const dad = await bindMemberInvite(world.db, dadLink.token);
+    expect(dad?.member.isManager).toBe(true);
+
+    const mum = await bindMemberInvite(world.db, mumLink.token);
+    expect(mum?.member.isManager).toBe(false);
+  });
 });

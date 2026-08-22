@@ -203,3 +203,17 @@ test("management link unlocks the manage screen", async ({ page }) => {
   await expect(page.getByText("🔧 Management")).toBeVisible();
   await expect(page.getByText("Prize wheel")).toBeVisible();
 });
+
+test("the team manager's own invite also unlocks the manage screen", async ({
+  page,
+}) => {
+  await bind(page, "Dad"); // Dad is flagged as manager in the demo seed
+  await page.goto("/manage");
+  await expect(page.getByText("🔧 Management")).toBeVisible();
+});
+
+test("a non-manager member cannot open the manage screen", async ({ page }) => {
+  await bind(page, "Evie");
+  await page.goto("/manage");
+  await expect(page.getByText("Management access needed")).toBeVisible();
+});

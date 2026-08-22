@@ -37,7 +37,7 @@ export async function createHousehold(
   args: {
     name: string;
     timezone: string;
-    members: { name: string; avatarStyle: AvatarStyle }[];
+    members: { name: string; avatarStyle: AvatarStyle; isManager?: boolean }[];
   },
 ): Promise<SetupResult> {
   if (await householdExists(db)) {
@@ -61,6 +61,7 @@ export async function createHousehold(
         householdId: household.id,
         displayName: m.name,
         avatarStyle: m.avatarStyle,
+        isManager: m.isManager ?? false,
       })
       .returning();
     const token = await issueMemberInvite(db, member.id);

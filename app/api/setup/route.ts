@@ -18,6 +18,7 @@ const setupSchema = z.object({
       z.object({
         name: z.string().min(1).max(40),
         avatarStyle: z.enum(AVATAR_STYLES),
+        isManager: z.boolean().optional(),
       }),
     )
     .length(4),

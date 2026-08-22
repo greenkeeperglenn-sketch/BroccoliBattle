@@ -37,7 +37,7 @@ async function main() {
     timezone: "Europe/London",
     members: [
       { name: "Mum", avatarStyle: "tomato" },
-      { name: "Dad", avatarStyle: "broccoli" },
+      { name: "Dad", avatarStyle: "broccoli", isManager: true },
       { name: "Cerys", avatarStyle: "blueberry" },
       { name: "Evie", avatarStyle: "carrot" },
     ],

@@ -1,0 +1,1638 @@
+{
+  "id": "b4d322da-dc35-47d1-b0b3-eff181e65aa6",
+  "prevId": "33c70be7-adce-4aa6-bf78-f82be0a868b8",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.challenge_definitions": {
+      "name": "challenge_definitions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "code": {
+          "name": "code",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "emoji": {
+          "name": "emoji",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "metric": {
+          "name": "metric",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "active": {
+          "name": "active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "challenge_definitions_code_idx": {
+          "name": "challenge_definitions_code_idx",
+          "columns": [
+            {
+              "expression": "code",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.food_aliases": {
+      "name": "food_aliases",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "food_id": {
+          "name": "food_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "alias_normalized": {
+          "name": "alias_normalized",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "food_aliases_alias_idx": {
+          "name": "food_aliases_alias_idx",
+          "columns": [
+            {
+              "expression": "alias_normalized",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "food_aliases_food_id_foods_id_fk": {
+          "name": "food_aliases_food_id_foods_id_fk",
+          "tableFrom": "food_aliases",
+          "tableTo": "foods",
+          "columnsFrom": [
+            "food_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.food_entries": {
+      "name": "food_entries",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "household_id": {
+          "name": "household_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "member_id": {
+          "name": "member_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "food_id": {
+          "name": "food_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "client_event_id": {
+          "name": "client_event_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "portion_size": {
+          "name": "portion_size",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "portion_units": {
+          "name": "portion_units",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "category_snapshot": {
+          "name": "category_snapshot",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "food_name_snapshot": {
+          "name": "food_name_snapshot",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "consumed_at": {
+          "name": "consumed_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "consumed_local_date": {
+          "name": "consumed_local_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "food_entries_client_event_idx": {
+          "name": "food_entries_client_event_idx",
+          "columns": [
+            {
+              "expression": "household_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "client_event_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "food_entries_member_date_idx": {
+          "name": "food_entries_member_date_idx",
+          "columns": [
+            {
+              "expression": "member_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "consumed_local_date",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "food_entries_household_date_idx": {
+          "name": "food_entries_household_date_idx",
+          "columns": [
+            {
+              "expression": "household_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "consumed_local_date",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "food_entries_household_id_households_id_fk": {
+          "name": "food_entries_household_id_households_id_fk",
+          "tableFrom": "food_entries",
+          "tableTo": "households",
+          "columnsFrom": [
+            "household_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "food_entries_member_id_members_id_fk": {
+          "name": "food_entries_member_id_members_id_fk",
+          "tableFrom": "food_entries",
+          "tableTo": "members",
+          "columnsFrom": [
+            "member_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "food_entries_food_id_foods_id_fk": {
+          "name": "food_entries_food_id_foods_id_fk",
+          "tableFrom": "food_entries",
+          "tableTo": "foods",
+          "columnsFrom": [
+            "food_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "food_entries_portion_units_positive": {
+          "name": "food_entries_portion_units_positive",
+          "value": "\"food_entries\".\"portion_units\" > 0"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.foods": {
+      "name": "foods",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "household_id": {
+          "name": "household_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "slug": {
+          "name": "slug",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "category": {
+          "name": "category",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "emoji": {
+          "name": "emoji",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'🥦'"
+        },
+        "personality": {
+          "name": "personality",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "qualifies_for_daily_target": {
+          "name": "qualifies_for_daily_target",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "daily_contribution_cap": {
+          "name": "daily_contribution_cap",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "source": {
+          "name": "source",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'seed'"
+        },
+        "created_by_member_id": {
+          "name": "created_by_member_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "active": {
+          "name": "active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "icon_url": {
+          "name": "icon_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "icon_status": {
+          "name": "icon_status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'placeholder'"
+        },
+        "icon_prompt": {
+          "name": "icon_prompt",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "icon_provider": {
+          "name": "icon_provider",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "icon_model": {
+          "name": "icon_model",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "icon_version": {
+          "name": "icon_version",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "foods_slug_idx": {
+          "name": "foods_slug_idx",
+          "columns": [
+            {
+              "expression": "slug",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "foods_household_id_households_id_fk": {
+          "name": "foods_household_id_households_id_fk",
+          "tableFrom": "foods",
+          "tableTo": "households",
+          "columnsFrom": [
+            "household_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "foods_created_by_member_id_members_id_fk": {
+          "name": "foods_created_by_member_id_members_id_fk",
+          "tableFrom": "foods",
+          "tableTo": "members",
+          "columnsFrom": [
+            "created_by_member_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.households": {
+      "name": "households",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "timezone": {
+          "name": "timezone",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'Europe/London'"
+        },
+        "weekly_family_target": {
+          "name": "weekly_family_target",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 140
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.management_invites": {
+      "name": "management_invites",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "household_id": {
+          "name": "household_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "token_hash": {
+          "name": "token_hash",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "active": {
+          "name": "active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "revoked_at": {
+          "name": "revoked_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "management_invites_token_hash_idx": {
+          "name": "management_invites_token_hash_idx",
+          "columns": [
+            {
+              "expression": "token_hash",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "management_invites_household_id_households_id_fk": {
+          "name": "management_invites_household_id_households_id_fk",
+          "tableFrom": "management_invites",
+          "tableTo": "households",
+          "columnsFrom": [
+            "household_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.management_sessions": {
+      "name": "management_sessions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "household_id": {
+          "name": "household_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "session_token_hash": {
+          "name": "session_token_hash",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "last_seen_at": {
+          "name": "last_seen_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "revoked_at": {
+          "name": "revoked_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "management_sessions_token_hash_idx": {
+          "name": "management_sessions_token_hash_idx",
+          "columns": [
+            {
+              "expression": "session_token_hash",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "management_sessions_household_id_households_id_fk": {
+          "name": "management_sessions_household_id_households_id_fk",
+          "tableFrom": "management_sessions",
+          "tableTo": "households",
+          "columnsFrom": [
+            "household_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.member_invites": {
+      "name": "member_invites",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "member_id": {
+          "name": "member_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "token_hash": {
+          "name": "token_hash",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "active": {
+          "name": "active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "revoked_at": {
+          "name": "revoked_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "member_invites_token_hash_idx": {
+          "name": "member_invites_token_hash_idx",
+          "columns": [
+            {
+              "expression": "token_hash",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "member_invites_member_id_members_id_fk": {
+          "name": "member_invites_member_id_members_id_fk",
+          "tableFrom": "member_invites",
+          "tableTo": "members",
+          "columnsFrom": [
+            "member_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.member_sessions": {
+      "name": "member_sessions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "member_id": {
+          "name": "member_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "session_token_hash": {
+          "name": "session_token_hash",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "last_seen_at": {
+          "name": "last_seen_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "revoked_at": {
+          "name": "revoked_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "member_sessions_token_hash_idx": {
+          "name": "member_sessions_token_hash_idx",
+          "columns": [
+            {
+              "expression": "session_token_hash",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "member_sessions_member_id_members_id_fk": {
+          "name": "member_sessions_member_id_members_id_fk",
+          "tableFrom": "member_sessions",
+          "tableTo": "members",
+          "columnsFrom": [
+            "member_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.members": {
+      "name": "members",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "household_id": {
+          "name": "household_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "display_name": {
+          "name": "display_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "avatar_style": {
+          "name": "avatar_style",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'broccoli'"
+        },
+        "avatar_url": {
+          "name": "avatar_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "is_manager": {
+          "name": "is_manager",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "active": {
+          "name": "active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "members_household_id_households_id_fk": {
+          "name": "members_household_id_households_id_fk",
+          "tableFrom": "members",
+          "tableTo": "households",
+          "columnsFrom": [
+            "household_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.prize_definitions": {
+      "name": "prize_definitions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "household_id": {
+          "name": "household_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "emoji": {
+          "name": "emoji",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'🎁'"
+        },
+        "weight": {
+          "name": "weight",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        },
+        "active": {
+          "name": "active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "prize_definitions_household_id_households_id_fk": {
+          "name": "prize_definitions_household_id_households_id_fk",
+          "tableFrom": "prize_definitions",
+          "tableTo": "households",
+          "columnsFrom": [
+            "household_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "prize_definitions_weight_positive": {
+          "name": "prize_definitions_weight_positive",
+          "value": "\"prize_definitions\".\"weight\" > 0"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.prize_spins": {
+      "name": "prize_spins",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "weekly_battle_id": {
+          "name": "weekly_battle_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "member_id": {
+          "name": "member_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "prize_definition_id": {
+          "name": "prize_definition_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "prize_snapshot": {
+          "name": "prize_snapshot",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "prize_spins_battle_member_idx": {
+          "name": "prize_spins_battle_member_idx",
+          "columns": [
+            {
+              "expression": "weekly_battle_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "member_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "prize_spins_weekly_battle_id_weekly_battles_id_fk": {
+          "name": "prize_spins_weekly_battle_id_weekly_battles_id_fk",
+          "tableFrom": "prize_spins",
+          "tableTo": "weekly_battles",
+          "columnsFrom": [
+            "weekly_battle_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "prize_spins_member_id_members_id_fk": {
+          "name": "prize_spins_member_id_members_id_fk",
+          "tableFrom": "prize_spins",
+          "tableTo": "members",
+          "columnsFrom": [
+            "member_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "prize_spins_prize_definition_id_prize_definitions_id_fk": {
+          "name": "prize_spins_prize_definition_id_prize_definitions_id_fk",
+          "tableFrom": "prize_spins",
+          "tableTo": "prize_definitions",
+          "columnsFrom": [
+            "prize_definition_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.prize_tickets": {
+      "name": "prize_tickets",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "household_id": {
+          "name": "household_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "member_id": {
+          "name": "member_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "weekly_battle_id": {
+          "name": "weekly_battle_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "prize_spin_id": {
+          "name": "prize_spin_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "title_snapshot": {
+          "name": "title_snapshot",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description_snapshot": {
+          "name": "description_snapshot",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "emoji_snapshot": {
+          "name": "emoji_snapshot",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "won_for_snapshot": {
+          "name": "won_for_snapshot",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'unused'"
+        },
+        "issued_at": {
+          "name": "issued_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "cashed_in_at": {
+          "name": "cashed_in_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "prize_tickets_spin_idx": {
+          "name": "prize_tickets_spin_idx",
+          "columns": [
+            {
+              "expression": "prize_spin_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "prize_tickets_household_id_households_id_fk": {
+          "name": "prize_tickets_household_id_households_id_fk",
+          "tableFrom": "prize_tickets",
+          "tableTo": "households",
+          "columnsFrom": [
+            "household_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "prize_tickets_member_id_members_id_fk": {
+          "name": "prize_tickets_member_id_members_id_fk",
+          "tableFrom": "prize_tickets",
+          "tableTo": "members",
+          "columnsFrom": [
+            "member_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "prize_tickets_weekly_battle_id_weekly_battles_id_fk": {
+          "name": "prize_tickets_weekly_battle_id_weekly_battles_id_fk",
+          "tableFrom": "prize_tickets",
+          "tableTo": "weekly_battles",
+          "columnsFrom": [
+            "weekly_battle_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "prize_tickets_prize_spin_id_prize_spins_id_fk": {
+          "name": "prize_tickets_prize_spin_id_prize_spins_id_fk",
+          "tableFrom": "prize_tickets",
+          "tableTo": "prize_spins",
+          "columnsFrom": [
+            "prize_spin_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.weekly_battles": {
+      "name": "weekly_battles",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "household_id": {
+          "name": "household_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "week_start_local": {
+          "name": "week_start_local",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "week_end_local": {
+          "name": "week_end_local",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "challenge_definition_id": {
+          "name": "challenge_definition_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "challenge_snapshot": {
+          "name": "challenge_snapshot",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'open'"
+        },
+        "report": {
+          "name": "report",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "closed_at": {
+          "name": "closed_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "weekly_battles_household_week_idx": {
+          "name": "weekly_battles_household_week_idx",
+          "columns": [
+            {
+              "expression": "household_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "week_start_local",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "weekly_battles_household_id_households_id_fk": {
+          "name": "weekly_battles_household_id_households_id_fk",
+          "tableFrom": "weekly_battles",
+          "tableTo": "households",
+          "columnsFrom": [
+            "household_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "weekly_battles_challenge_definition_id_challenge_definitions_id_fk": {
+          "name": "weekly_battles_challenge_definition_id_challenge_definitions_id_fk",
+          "tableFrom": "weekly_battles",
+          "tableTo": "challenge_definitions",
+          "columnsFrom": [
+            "challenge_definition_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.weekly_member_results": {
+      "name": "weekly_member_results",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "weekly_battle_id": {
+          "name": "weekly_battle_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "member_id": {
+          "name": "member_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "score": {
+          "name": "score",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "rank": {
+          "name": "rank",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "winner": {
+          "name": "winner",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "result_detail": {
+          "name": "result_detail",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "weekly_member_results_battle_member_idx": {
+          "name": "weekly_member_results_battle_member_idx",
+          "columns": [
+            {
+              "expression": "weekly_battle_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "member_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "weekly_member_results_weekly_battle_id_weekly_battles_id_fk": {
+          "name": "weekly_member_results_weekly_battle_id_weekly_battles_id_fk",
+          "tableFrom": "weekly_member_results",
+          "tableTo": "weekly_battles",
+          "columnsFrom": [
+            "weekly_battle_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "weekly_member_results_member_id_members_id_fk": {
+          "name": "weekly_member_results_member_id_members_id_fk",
+          "tableFrom": "weekly_member_results",
+          "tableTo": "members",
+          "columnsFrom": [
+            "member_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

@@ -31,6 +31,7 @@ export async function createWorld(): Promise<TestWorld> {
     members: FAMILY.map((name, i) => ({
       name,
       avatarStyle: (["broccoli", "tomato", "blueberry", "carrot"] as const)[i],
+      isManager: name === "Dad",
     })),
   });
   const [household] = await db

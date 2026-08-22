@@ -40,6 +40,9 @@ export const members = pgTable("members", {
   // One of the preset avatar colour styles, e.g. "broccoli", "tomato".
   avatarStyle: text("avatar_style").notNull().default("broccoli"),
   avatarUrl: text("avatar_url"),
+  // A manager's ordinary member session also unlocks /manage — chosen at
+  // setup so there is no separate admin link to lose.
+  isManager: boolean("is_manager").notNull().default(false),
   active: boolean("active").notNull().default(true),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
