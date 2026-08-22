@@ -64,18 +64,27 @@ async function main() {
     .select()
     .from(schema.challengeDefinitions)
     .where(eq(schema.challengeDefinitions.code, vegKing.code));
+  const vegKingSnapshot = {
+    code: vegKing.code,
+    name: vegKing.name,
+    description: vegKing.description,
+    emoji: vegKing.emoji,
+    metric: vegKing.metric,
+  };
   await db.insert(schema.weeklyBattles).values({
     householdId: household.id,
     weekStartLocal: lastWeekStart,
     weekEndLocal: dates.weekEndOf(lastWeekStart),
     challengeDefinitionId: vegKingRow.id,
-    challengeSnapshot: {
-      code: vegKing.code,
-      name: vegKing.name,
-      description: vegKing.description,
-      emoji: vegKing.emoji,
-      metric: vegKing.metric,
-    },
+    challengeSnapshot: vegKingSnapshot,
+  });
+  // This week is also Veg King, so demo standings and E2E are deterministic.
+  await db.insert(schema.weeklyBattles).values({
+    householdId: household.id,
+    weekStartLocal: thisWeekStart,
+    weekEndLocal: dates.weekEndOf(thisWeekStart),
+    challengeDefinitionId: vegKingRow.id,
+    challengeSnapshot: vegKingSnapshot,
   });
 
   let counter = 0;
