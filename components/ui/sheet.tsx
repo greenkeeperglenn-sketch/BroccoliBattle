@@ -44,10 +44,15 @@ export function Sheet({
       <button
         aria-label="Close"
         className="absolute inset-0 bg-ink/45"
+        // iOS replays the opening tap as synthetic mouse/click events at the
+        // same coordinates, which land on this backdrop and would close the
+        // sheet instantly. Real touches always fire pointerdown; the replayed
+        // ghosts never do — so close on pointerdown and keep a long-guarded
+        // click fallback only for ancient browsers without pointer events.
+        onPointerDown={onClose}
         onClick={() => {
-          // iOS fires a delayed "ghost" click from the tap that opened the
-          // sheet; it lands on this backdrop and would close it instantly.
-          if (Date.now() - openedAt.current < 400) return;
+          if (typeof PointerEvent !== "undefined") return;
+          if (Date.now() - openedAt.current < 800) return;
           onClose();
         }}
       />
