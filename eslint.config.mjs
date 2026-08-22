@@ -1,5 +1,5 @@
 import { defineConfig, globalIgnores } from "eslint/config";
-import { flatConfig as next } from "@next/eslint-plugin-next";
+import next from "eslint-config-next";
 
 export default defineConfig([
   globalIgnores([
@@ -10,5 +10,5 @@ export default defineConfig([
     "test-results/**",
     "public/sw.js",
   ]),
-  next.coreWebVitals,
+  ...next,
 ]);
