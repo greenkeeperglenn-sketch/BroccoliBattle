@@ -1,10 +1,13 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 
 /**
- * Thumb-friendly bottom sheet. Renders nothing when closed; traps focus
- * loosely and closes on backdrop tap or Escape.
+ * Thumb-friendly bottom sheet. Renders nothing when closed; closes on
+ * backdrop tap or Escape. Rendered through a portal onto <body> so it
+ * always overlays the whole viewport — ancestors with filters/transforms
+ * (like the blurred header) would otherwise trap `position: fixed`.
  */
 export function Sheet({
   open,
@@ -34,7 +37,7 @@ export function Sheet({
 
   if (!open) return null;
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-50 flex items-end justify-center">
       <button
         aria-label="Close"
@@ -54,6 +57,7 @@ export function Sheet({
         ) : null}
         {children}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
