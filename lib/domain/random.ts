@@ -1,4 +1,4 @@
-import { randomInt } from "node:crypto";
+import { randomBytes } from "node:crypto";
 
 /**
  * All authoritative randomness (weekly challenge draw, prize wheel) goes
@@ -7,7 +7,8 @@ import { randomInt } from "node:crypto";
  */
 export type Rng = () => number; // [0, 1)
 
-export const secureRng: Rng = () => randomInt(0, 2 ** 48) / 2 ** 48;
+export const secureRng: Rng = () =>
+  randomBytes(6).readUIntBE(0, 6) / 2 ** 48;
 
 export function pickUniform<T>(items: readonly T[], rng: Rng = secureRng): T {
   if (items.length === 0) throw new Error("Cannot pick from an empty list");
