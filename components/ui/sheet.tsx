@@ -21,9 +21,11 @@ export function Sheet({
   children: React.ReactNode;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const openedAt = useRef(0);
 
   useEffect(() => {
     if (!open) return;
+    openedAt.current = Date.now();
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
     };
@@ -42,7 +44,12 @@ export function Sheet({
       <button
         aria-label="Close"
         className="absolute inset-0 bg-ink/45"
-        onClick={onClose}
+        onClick={() => {
+          // iOS fires a delayed "ghost" click from the tap that opened the
+          // sheet; it lands on this backdrop and would close it instantly.
+          if (Date.now() - openedAt.current < 400) return;
+          onClose();
+        }}
       />
       <div
         ref={ref}
