@@ -36,17 +36,17 @@ export function TodayProgress({
         </button>
       </div>
       <div className="flex items-center justify-between gap-3 px-4 pb-4 pt-1">
-        <p className="font-display text-5xl leading-none">
+        <p className="font-display whitespace-nowrap text-5xl leading-none">
           {formatUnits(total)}
           <span className="text-2xl text-ink-soft"> / 5</span>
         </p>
-        <div className="flex gap-1.5" aria-hidden="true">
+        <div className="flex shrink-0 gap-1" aria-hidden="true">
           {SLOT_CHARS.map((char, i) => {
             const fill = Math.max(0, Math.min(1, total - i));
             return (
               <span
                 key={i}
-                className={`flex size-11 items-center justify-center rounded-full border-[2.5px] border-ink text-xl transition-all ${
+                className={`flex size-10 items-center justify-center rounded-full border-[2.5px] border-ink text-lg transition-all ${
                   fill >= 1
                     ? "animate-pop bg-broccoli-light"
                     : fill > 0
