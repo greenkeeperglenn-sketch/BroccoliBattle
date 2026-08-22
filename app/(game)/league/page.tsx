@@ -3,7 +3,7 @@ import { getCurrentMember } from "@/lib/auth/current";
 import { getDb } from "@/lib/db/client";
 import { getLeague, type LeaguePeriod } from "@/lib/domain/views";
 import { Avatar } from "@/components/ui/avatar";
-import { formatUnits } from "@/components/battle/today-progress";
+import { formatUnits } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
 

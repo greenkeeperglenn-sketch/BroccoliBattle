@@ -7,7 +7,7 @@ import { formatWeekRange } from "@/lib/domain/dates";
 import { Avatar } from "@/components/ui/avatar";
 import { Confetti } from "@/components/ui/confetti";
 import { TicketCard } from "@/components/prizes/ticket-card";
-import { formatUnits } from "@/components/battle/today-progress";
+import { formatUnits } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
 

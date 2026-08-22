@@ -2,7 +2,7 @@ import { getCurrentMember } from "@/lib/auth/current";
 import { getDb } from "@/lib/db/client";
 import { getHallOfGlory } from "@/lib/domain/views";
 import { formatWeekRange } from "@/lib/domain/dates";
-import { formatUnits } from "@/components/battle/today-progress";
+import { formatUnits } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
 

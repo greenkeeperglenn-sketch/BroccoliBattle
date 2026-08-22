@@ -1,6 +1,9 @@
 "use client";
 
 import { FIVE_A_DAY } from "@/lib/domain/scoring";
+import { formatUnits } from "@/lib/format";
+
+export { formatUnits };
 
 const SLOT_CHARS = ["🥕", "🍓", "🥦", "🍇", "⭐"];
 
@@ -70,8 +73,4 @@ export function TodayProgress({
       ) : null}
     </section>
   );
-}
-
-export function formatUnits(n: number): string {
-  return Number.isInteger(n) ? String(n) : n.toFixed(1);
 }

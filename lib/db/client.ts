@@ -1,4 +1,5 @@
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
+import { mkdirSync } from "node:fs";
 import path from "node:path";
 import * as schema from "./schema";
 
@@ -41,6 +42,7 @@ async function createDb(): Promise<Db> {
           url?.replace(/^pglite:\/\//, "") || ".data/pglite",
         );
 
+  if (target) mkdirSync(target, { recursive: true });
   const pglite = target ? new PGlite(target) : new PGlite();
   const db = drizzle(pglite, { schema });
   await migrate(db, {

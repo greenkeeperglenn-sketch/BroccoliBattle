@@ -58,7 +58,7 @@ export const SEED_VEG: SeedFood[] = [
   { name: "Aubergine", emoji: "🍆", personality: "Thinks it is much cooler than it really is", aliases: ["eggplant"] },
   { name: "Mushroom", emoji: "🍄", personality: "Suspicious character lurking in the dark", aliases: ["mushrooms"] },
   { name: "Asparagus", emoji: "🌱", personality: "Fancy spear, fancier opinions" },
-  { name: "Beetroot", emoji: "🫜", personality: "Blushes permanently, stains everything", aliases: ["beet", "beets"] },
+  { name: "Beetroot", emoji: "🍠", personality: "Blushes permanently, stains everything", aliases: ["beet", "beets"] },
   { name: "Celery", emoji: "🥬", personality: "Mostly crunch, entirely committed" },
   { name: "Lettuce", emoji: "🥬", personality: "Crisp, leafy, surprisingly good at hiding" },
   { name: "Avocado", emoji: "🥑", personality: "Smooth operator with a heart of stone" },

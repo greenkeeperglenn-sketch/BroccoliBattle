@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import { Confetti } from "@/components/ui/confetti";
 
 export type WheelSegment = {
@@ -27,7 +26,6 @@ export function PrizeWheel({
   battleId: string;
   segments: WheelSegment[];
 }) {
-  const router = useRouter();
   const [phase, setPhase] = useState<Phase>("ready");
   const [rotation, setRotation] = useState(0);
   const [prize, setPrize] = useState<{ title: string; emoji: string; description: string | null } | null>(null);
@@ -84,10 +82,9 @@ export function PrizeWheel({
         description: data.prize.description,
       });
       if (navigator.vibrate) navigator.vibrate([20, 40, 20]);
-      revealTimer.current = setTimeout(() => {
-        setPhase("revealed");
-        router.refresh();
-      }, 4300);
+      // No router.refresh() here: the server page would swap the celebration
+      // for the "already spun" view. The reveal card handles onward links.
+      revealTimer.current = setTimeout(() => setPhase("revealed"), 4300);
     } catch {
       setPhase("error");
       setError("Battle HQ is unreachable. Your spin is safe — try again when you're online.");
