@@ -57,6 +57,34 @@ export function ManageScreen(props: Props) {
   const router = useRouter();
   const [message, setMessage] = useState<string | null>(null);
   const [freshInvite, setFreshInvite] = useState<{ name: string; url: string } | null>(null);
+  const [drawing, setDrawing] = useState<string | null>(null);
+
+  // Draws every food that still has an emoji placeholder, one at a time —
+  // the phone-friendly replacement for the pnpm generate:food-art script.
+  const drawAllMissing = async () => {
+    const todo = props.foods.filter(
+      (f) => f.active && f.iconStatus !== "ready" && f.iconStatus !== "generating",
+    );
+    if (todo.length === 0 || drawing) return;
+    let done = 0;
+    let failed = 0;
+    for (const food of todo) {
+      setDrawing(`Drawing ${food.name}… (${done + failed + 1}/${todo.length}${failed ? `, ${failed} failed` : ""})`);
+      try {
+        await post("/api/manage/foods", { action: "generateArt", foodId: food.id });
+        done += 1;
+      } catch {
+        failed += 1;
+      }
+    }
+    setDrawing(null);
+    setMessage(
+      failed === 0
+        ? `🎨 All done — ${done} characters drawn. Every fighter has a face.`
+        : `🎨 ${done} drawn, ${failed} failed — run it again to retry the stragglers.`,
+    );
+    router.refresh();
+  };
 
   const act = async (fn: () => Promise<void>) => {
     setMessage(null);
@@ -146,6 +174,22 @@ export function ManageScreen(props: Props) {
 
       {/* ── Food catalogue ── */}
       <Section title="🥕 Food catalogue">
+        {props.artworkAvailable ? (
+          <div className="pb-3">
+            <button
+              onClick={() => void drawAllMissing()}
+              disabled={drawing !== null}
+              className="pressable card-sticker w-full bg-custard-light px-4 py-2.5 font-display text-sm disabled:opacity-60"
+            >
+              {drawing ?? "🎨 Draw all missing characters"}
+            </button>
+            <p className="pt-1.5 text-[11px] font-bold text-ink-soft">
+              Generates cartoon artwork for every food that still shows an
+              emoji. One drawing at a time — takes a while, keep this page
+              open. Already-drawn characters are never redrawn.
+            </p>
+          </div>
+        ) : null}
         <FoodList
           foods={props.foods}
           artworkAvailable={props.artworkAvailable}

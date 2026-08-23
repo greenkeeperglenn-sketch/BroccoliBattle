@@ -1,4 +1,4 @@
-import { and, asc, desc, eq, gte, isNull, lt, lte } from "drizzle-orm";
+import { and, asc, desc, eq, gte, inArray, isNull, lt, lte } from "drizzle-orm";
 import type { Db, Tx } from "@/lib/db/client";
 import {
   challengeDefinitions,
@@ -22,7 +22,9 @@ import {
   rankMembers,
   type ScoringEntry,
 } from "./scoring";
-import { buildTemplatedReport } from "./report";
+import { buildTemplatedReport, type ReportInput } from "./report";
+import { generateAIBattleReport } from "@/lib/ai/report";
+import { hasTextAI } from "@/lib/ai/openai";
 
 /**
  * Weekly battle lifecycle. The game must self-heal without a cron job:
@@ -109,12 +111,17 @@ export async function selectRandomChallenge(
 /**
  * Close one battle: snapshot final per-member results, mark it closed and
  * store a templated battle report. Idempotent — a battle already closed by
- * a concurrent request is left untouched.
+ * a concurrent request is left untouched. When text AI is configured, the
+ * templated report is upgraded to an AI-written one after the transaction
+ * (once — it is stored, never regenerated).
  */
 export async function closeBattle(
   db: Db,
   battleId: string,
 ): Promise<void> {
+  let reportInput: import("./report").ReportInput | null = null;
+  let closedBattleId: string | null = null;
+
   await db.transaction(async (tx) => {
     const [battle] = await tx
       .select()
@@ -158,7 +165,7 @@ export async function closeBattle(
       .from(households)
       .where(eq(households.id, battle.householdId));
 
-    const report = buildTemplatedReport({
+    reportInput = {
       challenge: battle.challengeSnapshot,
       standings: standings.map((s) => ({
         name: s.member.displayName,
@@ -169,13 +176,51 @@ export async function closeBattle(
       familyTotal: entries.reduce((sum, e) => sum + e.portionUnits, 0),
       familyTarget: household?.weeklyFamilyTarget ?? 140,
       entries,
-    });
+    };
+    closedBattleId = battle.id;
 
     await tx
       .update(weeklyBattles)
-      .set({ status: "closed", closedAt: new Date(), report })
+      .set({
+        status: "closed",
+        closedAt: new Date(),
+        report: buildTemplatedReport(reportInput),
+      })
       .where(eq(weeklyBattles.id, battle.id));
   });
+
+  // Level 3: try to upgrade the templated report with an AI-written one.
+  // Best-effort — any failure leaves the (also fun) templated report.
+  if (closedBattleId && reportInput && hasTextAI()) {
+    try {
+      const input: ReportInput = reportInput;
+      const counts = new Map<string, number>(); // foodId → times eaten this week
+      for (const e of input.entries) {
+        counts.set(e.foodId, (counts.get(e.foodId) ?? 0) + 1);
+      }
+      let foodNames: { name: string; count: number }[] = [];
+      if (counts.size > 0) {
+        const { foods } = await import("@/lib/db/schema");
+        const rows = await db
+          .select({ id: foods.id, name: foods.name })
+          .from(foods)
+          .where(inArray(foods.id, [...counts.keys()]));
+        foodNames = rows
+          .map((r) => ({ name: r.name, count: counts.get(r.id) ?? 0 }))
+          .sort((a, b) => b.count - a.count);
+      }
+
+      const aiReport = await generateAIBattleReport({ ...input, foodNames });
+      if (aiReport) {
+        await db
+          .update(weeklyBattles)
+          .set({ report: aiReport })
+          .where(eq(weeklyBattles.id, closedBattleId));
+      }
+    } catch {
+      // Keep the templated report.
+    }
+  }
 }
 
 /**

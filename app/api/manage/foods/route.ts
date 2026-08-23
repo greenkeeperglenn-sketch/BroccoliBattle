@@ -10,6 +10,9 @@ import {
   isArtworkAvailable,
 } from "@/lib/ai/artwork";
 
+// Image generation takes tens of seconds; allow the function time for it.
+export const maxDuration = 60;
+
 const schema = z.discriminatedUnion("action", [
   z.object({
     action: z.literal("setActive"),

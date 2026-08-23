@@ -7,6 +7,10 @@ import { createCustomFood } from "@/lib/domain/foods";
 import { copy } from "@/lib/domain/copy";
 import { generateFoodArtwork, isArtworkAvailable } from "@/lib/ai/artwork";
 
+// Custom foods kick off artwork generation after the response; give the
+// function time to finish it.
+export const maxDuration = 60;
+
 const createSchema = z.object({
   name: z.string().min(2).max(60),
   categoryHint: z.enum(["fruit", "veg"]).optional(),
