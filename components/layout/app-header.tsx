@@ -9,10 +9,12 @@ export function AppHeader({
   memberName,
   avatarStyle,
   householdName,
+  version,
 }: {
   memberName: string;
   avatarStyle: string;
   householdName: string;
+  version?: string;
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -57,6 +59,11 @@ export function AppHeader({
             This phone is bound to {memberName}. To move to a new phone, open
             your invite link there.
           </p>
+          {version ? (
+            <p className="pt-1 text-center text-[10px] font-bold text-ink-soft/60">
+              Version {version}
+            </p>
+          ) : null}
         </div>
       </Sheet>
     </header>
