@@ -84,8 +84,13 @@ export async function generateFoodArtwork(
       .update(foods)
       .set({ iconStatus: "failed", updatedAt: new Date() })
       .where(eq(foods.id, food.id));
-    throw new ArtworkError(
-      `Generation failed for ${food.name} (${imageModelName()}): ${err instanceof Error ? err.message : String(err)}`,
+    // Redact anything key-shaped: a secret pasted into the model variable
+    // must never surface in a UI error message.
+    const model = imageModelName().replace(/^sk-.*$/, "[misconfigured: contains a secret]");
+    const detail = (err instanceof Error ? err.message : String(err)).replace(
+      /sk-[A-Za-z0-9_-]{10,}/g,
+      "[redacted]",
     );
+    throw new ArtworkError(`Generation failed for ${food.name} (${model}): ${detail}`);
   }
 }

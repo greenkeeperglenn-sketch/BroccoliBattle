@@ -35,7 +35,16 @@ async function openaiFetch(path: string, body: unknown, timeoutMs = 30_000) {
     });
     if (!res.ok) {
       const text = await res.text().catch(() => "");
-      throw new Error(`OpenAI ${path} failed (${res.status}): ${text.slice(0, 300)}`);
+      // Never leak secrets into error messages shown in the UI: if any
+      // configured env value (e.g. a key pasted into the wrong variable)
+      // appears in the response, redact it.
+      const redacted = [process.env.OPENAI_API_KEY, key]
+        .filter((s): s is string => Boolean(s && s.length > 8))
+        .reduce((msg, secret) => msg.split(secret).join("[redacted]"), text)
+        .replace(/sk-[A-Za-z0-9_-]{10,}/g, "[redacted]");
+      throw new Error(
+        `OpenAI ${path} failed (${res.status}): ${redacted.slice(0, 300)}`,
+      );
     }
     return res.json();
   } finally {
