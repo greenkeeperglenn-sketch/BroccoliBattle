@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { getCurrentMember } from "@/lib/auth/current";
 import { AppHeader } from "@/components/layout/app-header";
 import { BottomNav } from "@/components/layout/bottom-nav";
+import { AutoRefresh } from "@/components/pwa/auto-refresh";
 
 export default async function GameLayout({
   children,
@@ -26,6 +27,7 @@ export default async function GameLayout({
       />
       <main className="mx-auto max-w-md px-4 pt-4">{children}</main>
       <BottomNav />
+      <AutoRefresh />
     </div>
   );
 }
